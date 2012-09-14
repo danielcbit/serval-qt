@@ -3,7 +3,8 @@ CONFIG += ordered
 
 SUBDIRS += \
     $$PWD/3rdparty \
-    $$PWD/src
+    $$PWD/src \
+    servald
 
 # workarounds to generate Smart Installer via Qt SDK
 symbian {
@@ -21,4 +22,11 @@ symbian {
 
 OTHER_FILES += \
     $$PWD/qml/main.qml \
-    $$PWD/qml/MainPage.qml
+    $$PWD/qml/MainPage.qml\
+    $$PWD/qtc_packaging/debian_harmattan/changelog \
+    $$PWD/qtc_packaging/debian_harmattan/compat \
+    $$PWD/qtc_packaging/debian_harmattan/control \
+    $$PWD/qtc_packaging/debian_harmattan/copyright \
+    $$PWD/qtc_packaging/debian_harmattan/manifest.aegis \
+    $$PWD/qtc_packaging/debian_harmattan/README \
+    $$PWD/qtc_packaging/debian_harmattan/rules

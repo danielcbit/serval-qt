@@ -8,6 +8,7 @@ INCLUDEPATH += \
     $$PWD/../libnacl/src/
 
 LIBS += \
+    -lnacl \
     -L$$DESTDIR \
 
 symbian: {

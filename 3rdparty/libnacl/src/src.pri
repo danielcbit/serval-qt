@@ -30,7 +30,8 @@ PUBLIC_HEADERS += \
 HEADERS += $$PUBLIC_HEADERS
 
 SOURCES += \
-    $$PWD//crypto_auth_hmacsha256_ref/hmac_256.c \
+    $$PWD/randombytes.c \
+    $$PWD/crypto_auth_hmacsha256_ref/hmac_256.c \
     $$PWD/crypto_auth_hmacsha256_ref/verify_256.c \
     $$PWD/crypto_auth_hmacsha512256_ref/hmac_512.c \
     $$PWD/crypto_auth_hmacsha512256_ref/verify_512.c \

@@ -9,9 +9,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
-
-
+LD_LIBRARY_PATH=$(CURDIR)/debian/serval/opt/serval/lib
+export LD_LIBRARY_PATH
 
 configure: configure-stamp
 configure-stamp:

@@ -47,7 +47,7 @@ static int flag_show_time = -1;
    writing.
  */
 static char _log_buf[8192];
-static struct strbuf logbuf = STRUCT_STRBUF_EMPTY;
+static struct s_strbuf logbuf = STRUCT_STRBUF_EMPTY;
 
 #ifdef ANDROID
 #include <android/log.h>
@@ -206,7 +206,7 @@ static void _log_finish(int level)
     _log_implementation(level, &logbuf);
 }
 
-void set_log_implementation(void (*log_function)(int level, struct strbuf *buf))
+void set_log_implementation(void (*log_function)(int level, struct s_strbuf *buf))
 {
   _log_implementation=log_function;
 }
@@ -406,7 +406,7 @@ int log_backtrace(struct __sourceloc where)
   char tempfile[512];
   if (!FORM_SERVAL_INSTANCE_PATH(tempfile, "servalXXXXXX.gdb"))
     return -1;
-  int tmpfd = mkstemps(tempfile, 4);
+  int tmpfd = mkstemp(tempfile);
   if (tmpfd == -1)
     return WHY_perror("mkstemps");
   if (write_str(tmpfd, "backtrace\n") == -1) {

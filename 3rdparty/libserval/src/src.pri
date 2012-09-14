@@ -39,6 +39,7 @@ PUBLIC_HEADERS += \
 HEADERS += $$PUBLIC_HEADERS
 
 SOURCES += \
+    $$PWD/main.c \
     $$PWD/overlay_abbreviations.c \
     $$PWD/overlay_advertise.c \
     $$PWD/overlay_buffer.c \
@@ -74,6 +75,7 @@ SOURCES += \
     $$PWD/rhizome_http.c \
     $$PWD/rhizome_packetformats.c \
     $$PWD/responses.c \
+    $$PWD/strlcpy.c \
     $$PWD/serval_packetvisualise.c \
     $$PWD/server.c \
     $$PWD/sha2.c \

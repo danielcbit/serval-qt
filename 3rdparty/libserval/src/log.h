@@ -61,7 +61,7 @@ extern unsigned int debug;
 #define LOG_LEVEL_ERROR     (3)
 #define LOG_LEVEL_FATAL     (4)
 
-struct strbuf;
+struct s_strbuf;
 
 struct __sourceloc {
     const char *file;
@@ -82,7 +82,7 @@ char *toprint(char *dstStr, ssize_t dstBufSiz, const char *srcBuf, size_t srcByt
 size_t toprint_strlen(const char *srcBuf, size_t srcBytes);
 ssize_t get_self_executable_path(char *buf, size_t len);
 int log_backtrace(struct __sourceloc where);
-void set_log_implementation(void (*log_function)(int level, struct strbuf *buf));
+void set_log_implementation(void (*log_function)(int level, struct s_strbuf *buf));
 
 #define alloca_toprint(dstlen,buf,len)  toprint((char *)alloca((dstlen) == -1 ? toprint_strlen((buf),(len)) + 1 : (dstlen)), (dstlen), (buf), (len))
 

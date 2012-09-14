@@ -89,14 +89,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # endif
 #endif
 
-struct strbuf {
+struct s_strbuf {
     char *start; // NULL after strbuf_init(buffer=NULL)
     char *end; // NULL after strbuf_init(size=-1), otherwise end=&start[size-1]
     char *current;
 };
 
-/* Static constant for initialising a struct strbuf to empty:
- *      struct strbuf ssb = STRUCT_STRBUF_EMPTY;
+/* Static constant for initialising a struct s_strbuf to empty:
+ *      struct s_strbuf ssb = STRUCT_STRBUF_EMPTY;
  * Immediately following this assignment, the following properties hold:
  *      strbuf_is_empty(&ssb)
  *      strbuf_len(&ssb) == 0
@@ -105,14 +105,14 @@ struct strbuf {
  *
  * @author Andrew Bettison <andrew@servalproject.com>
  */
-#define STRUCT_STRBUF_EMPTY ((struct strbuf){NULL, NULL, NULL})
+#define STRUCT_STRBUF_EMPTY ((struct s_strbuf){NULL, NULL, NULL})
 
-typedef struct strbuf *strbuf;
-typedef const struct strbuf *const_strbuf;
+typedef struct s_strbuf *strbuf;
+typedef const struct s_strbuf *const_strbuf;
 
 /** The number of bytes occupied by a strbuf (not counting its backing buffer).
  */
-#define SIZEOF_STRBUF (sizeof(struct strbuf))
+#define SIZEOF_STRBUF (sizeof(struct s_strbuf))
 
 /** Convenience macro for allocating a strbuf and its backing buffer on the
  * stack within the calling function.  The returned strbuf is only valid for
