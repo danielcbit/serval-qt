@@ -1,0 +1,14 @@
+<aegis>
+    <request>
+	<credential name="UID::user" />
+	<credential name="GID::users" />
+	<credential name="GRP::users" />
+	<for path="/opt/serval/bin/servald" />
+	<for path="/opt/serval/bin/serval" />
+    </request>
+    <request context="INSTALL">
+	<credential name="UID::root" />
+	<credential name="GID::root" />
+	<credential name="GRP::root" />
+    </request>
+</aegis>
