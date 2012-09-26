@@ -38,6 +38,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "rhizome.h"
 #include "strbuf.h"
 
+union byteArray_time_ms_u {
+    unsigned char b[ sizeof( long long )];
+    long long l;
+} byteArray_time_ms;
+
 int cli_usage() {
   printf("Serval Mesh version <version>.\n");
   printf("Usage:\n");
@@ -606,7 +611,7 @@ int app_server_start(int argc, const char *const *argv, struct command_line_opti
     return -1;
   /* Now that we know our instance path, we can ask for the default set of
      network interfaces that we will take interest in. */
-  const char *interfaces = confValueGet("interfaces", "");
+  const char *interfaces = confValueGet("interfaces", "+wlan0");
   if (!interfaces[0])
     WHY("No network interfaces configured (empty 'interfaces' config setting)");
   overlay_interface_args(interfaces);
@@ -793,6 +798,18 @@ int app_server_status(int argc, const char *const *argv, struct command_line_opt
   return pid > 0 ? 0 : 1;
 }
 
+long long getLong(unsigned char data[], int offset) {
+    long long l = 0;
+    int i = 0;
+    for (i=0;i<8;i++) {
+        //l <<= 8;
+        //l += data[offset + i] & 0xFF;
+        //l |= ( (long long)data[i+offset]) << (i*8) );
+        l = (l << 8) | data[(7-i)+offset];
+    }
+    return l;
+}
+
 int app_mdp_ping(int argc, const char *const *argv, struct command_line_option *o)
 {
   if (debug & DEBUG_VERBOSE) DEBUG_argv("command", argc, argv);
@@ -848,9 +865,9 @@ int app_mdp_ping(int argc, const char *const *argv, struct command_line_option *
     mdp.out.payload_length=4+8;
     int *seq=(int *)&mdp.out.payload;
     *seq=sequence_number;
-    long long *txtime=(long long *)&mdp.out.payload[4];
-    *txtime=gettime_ms();
-    
+    byteArray_time_ms.l=gettime_ms();
+    memcpy( &mdp.out.payload[4], &byteArray_time_ms.l, 8 );
+
     int res=overlay_mdp_send(&mdp,0,0);
     if (res) {
       WHYF("ERROR: Could not dispatch PING frame #%d (error %d)", sequence_number - firstSeq, res);
@@ -877,8 +894,9 @@ int app_mdp_ping(int argc, const char *const *argv, struct command_line_option *
 	  case MDP_TX:
 	    {
 	      int *rxseq=(int *)&mdp.in.payload;
-	      long long *txtime=(long long *)&mdp.in.payload[4];
-	      time_ms_t delay = gettime_ms() - *txtime;
+          time_ms_t txtime=getLong(mdp.in.payload,4);
+          long long timeNow = (long long)gettime_ms();
+          time_ms_t delay = timeNow - txtime;
 	      printf("%s: seq=%d time=%lld ms%s%s\n",
 		     alloca_tohex_sid(mdp.in.src.sid),(*rxseq)-firstSeq+1,delay,
 		     mdp.packetTypeAndFlags&MDP_NOCRYPT?"":" ENCRYPTED",

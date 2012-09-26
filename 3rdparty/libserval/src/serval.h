@@ -146,6 +146,7 @@ typedef long long time_ms_t;
 #define PORT_DNA 4110
 
 /* OpenWRT libc doesn't have bcopy, but has memmove */
+/*bcopy is deprecated*/
 #define bcopy(A,B,C) memmove(B,A,C)
 
 #define BATCH 1

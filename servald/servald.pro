@@ -36,7 +36,8 @@ contains(MEEGO_EDITION, harmattan) {
 	HAVE_SYS_SOCKET_H=1 \
 	HAVE_NETINET_IN_H=1 \
 	HAVE_ARPA_INET_H=1 \
-	HAVE_POLL_H=1
+	HAVE_POLL_H=1 \
+	HAVE_SYS_TIME_H=1
 } else:symbian {
     # Hack to not generate a SIS package in Qt Creator
     TEMPLATE = subdirs
