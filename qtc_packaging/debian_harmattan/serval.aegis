@@ -11,6 +11,9 @@
 	<credential name="GRP::root" />
     </request>
     <request>
+	<credential name="UID::user" />
+	<credential name="GID::users" />
+	<credential name="GRP::users" />
 	<credential name="CAP::net_bind_service" />
 	<credential name="CAP::net_broadcast" />
 	<credential name="CAP::net_admin" />

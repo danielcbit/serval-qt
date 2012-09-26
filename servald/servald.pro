@@ -11,11 +11,8 @@ contains(MEEGO_EDITION, harmattan) {
     servald.files = $$PWD/servald.conf
 
     target.path = /opt/serval/bin
-    # Run directory used by serval
-    run.path = /opt/serval/run
-    run.files = $$PWD/serval.conf
 
-    INSTALLS += target servald run
+    INSTALLS += target servald
 
     LIBS += \
 	-L$$OUT_PWD/../3rdparty/lib \
