@@ -49,7 +49,8 @@ symbian: {
     HAVE_SYS_SOCKET_H=1 \
     HAVE_NETINET_IN_H=1 \
     HAVE_ARPA_INET_H=1 \
-    HAVE_POLL_H=1
+    HAVE_POLL_H=1 \
+    HAVE_SYS_TIME_H=1
 
     target.path = /opt/serval/lib
     INSTALLS += target

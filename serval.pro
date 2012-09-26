@@ -27,6 +27,8 @@ OTHER_FILES += \
     $$PWD/qtc_packaging/debian_harmattan/compat \
     $$PWD/qtc_packaging/debian_harmattan/control \
     $$PWD/qtc_packaging/debian_harmattan/copyright \
+    $$PWD/qtc_packaging/debian_harmattan/serval.postinst \
+    $$PWD/qtc_packaging/debian_harmattan/serval.postrm \
     $$PWD/qtc_packaging/debian_harmattan/serval.aegis \
     $$PWD/qtc_packaging/debian_harmattan/README \
     $$PWD/qtc_packaging/debian_harmattan/rules
