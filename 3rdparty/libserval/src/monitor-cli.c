@@ -127,9 +127,13 @@ int app_monitor_cli(int argc, const char *const *argv, struct command_line_optio
   unsigned char audioRecordBuffer[8000*2];
 
   int base_fd_count=fdcount;
+  monitor_audio *temp = audev;
   while(1) {
     fdcount=base_fd_count;
-    if (audev&&audev->poll_fds) fdcount+=audev->poll_fds(&fds[fdcount],128-fdcount);
+    if(audev) {
+        if (audev&&audev->poll_fds)
+            fdcount+=audev->poll_fds(&fds[fdcount],128-fdcount);
+    }
     poll(fds,fdcount,1000);
 
     set_nonblock(fd);

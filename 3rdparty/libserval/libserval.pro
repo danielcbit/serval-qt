@@ -9,6 +9,7 @@ INCLUDEPATH += \
 
 LIBS += \
     -lnacl \
+    -lasound \
     -L$$DESTDIR \
 
 symbian: {
@@ -50,7 +51,8 @@ symbian: {
     HAVE_NETINET_IN_H=1 \
     HAVE_ARPA_INET_H=1 \
     HAVE_POLL_H=1 \
-    HAVE_SYS_TIME_H=1
+    HAVE_SYS_TIME_H=1 \
+    HAVE_ALSA_ASOUNDLIB_H=1
 
     target.path = /opt/serval/lib
     INSTALLS += target

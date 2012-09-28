@@ -18,6 +18,7 @@ contains(MEEGO_EDITION, harmattan) {
 	-L$$OUT_PWD/../3rdparty/lib \
 	-lnacl \
 	-lserval \
+	-lasound \
 	-lsqlite3
 
 
