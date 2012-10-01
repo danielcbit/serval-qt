@@ -63,6 +63,7 @@ int getAudioBytes(unsigned char *buffer,
 
 int stopAudio()
 {
+    monitor_audio *monitor = audev;
   if (audev&&audev->stop) return audev->stop();
   return -1;
 }

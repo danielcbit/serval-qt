@@ -1,5 +1,5 @@
 /* 
-   Copyright (C) 2012 Paul Gardner-Stephen 
+   Copyright (C) 2012 Paul Gardner-Stephen
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@
 /* XXX Android NDK lacks the header files needed to build this.
    Will deal with it later */
 monitor_audio *audio_alsa_detect() {
-  return NULL;
+    return NULL;
 }
 #else
 
@@ -51,21 +51,22 @@ monitor_audio *audio_alsa_detect() {
    necessary symbols we need.
 */
 typedef struct alsa_functions {
-  int (*snd_pcm_open_preferred)(snd_pcm_t **,int *,int *,int);
-  int (*snd_pcm_open)(snd_pcm_t **,const char *,snd_pcm_stream_t,int);
-  int (*snd_pcm_close)(snd_pcm_t *);
-  int (*snd_pcm_hw_params_malloc)(snd_pcm_hw_params_t **);
-  int (*snd_pcm_hw_params_any)(snd_pcm_t *,snd_pcm_hw_params_t *);
-  int (*snd_pcm_hw_params_set_access)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
-  int (*snd_pcm_hw_params_set_format)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
-  int (*snd_pcm_hw_params_set_rate_near)(snd_pcm_t *,snd_pcm_hw_params_t *,int,int);
-  int (*snd_pcm_hw_params_set_channels)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
-  int (*snd_pcm_hw_params)(snd_pcm_t *,snd_pcm_hw_params_t *);
-  void (*snd_pcm_hw_params_free)(snd_pcm_hw_params_t *);
-  int (*snd_pcm_prepare)(snd_pcm_t *);
-  int (*snd_pcm_writei)(snd_pcm_t *,short *,int);
-  int (*snd_pcm_readi)(snd_pcm_t *,short *,int);
-  int (*snd_pcm_poll_descriptors)(snd_pcm_t *,struct pollfd *,unsigned int);
+    int (*snd_pcm_open_preferred)(snd_pcm_t **,int *,int *,int);
+    int (*snd_pcm_open)(snd_pcm_t **,const char *,snd_pcm_stream_t,int);
+    int (*snd_pcm_close)(snd_pcm_t *);
+    int (*snd_pcm_set_params)(snd_pcm_t *,snd_pcm_format_t, snd_pcm_access_t, unsigned int, unsigned int, int, unsigned int);
+    int (*snd_pcm_hw_params_malloc)(snd_pcm_hw_params_t **);
+    int (*snd_pcm_hw_params_any)(snd_pcm_t *,snd_pcm_hw_params_t *);
+    int (*snd_pcm_hw_params_set_access)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
+    int (*snd_pcm_hw_params_set_format)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
+    int (*snd_pcm_hw_params_set_rate_near)(snd_pcm_t *,snd_pcm_hw_params_t *,int,int);
+    int (*snd_pcm_hw_params_set_channels)(snd_pcm_t *,snd_pcm_hw_params_t *,int);
+    int (*snd_pcm_hw_params)(snd_pcm_t *,snd_pcm_hw_params_t *);
+    void (*snd_pcm_hw_params_free)(snd_pcm_hw_params_t *);
+    int (*snd_pcm_prepare)(snd_pcm_t *);
+    int (*snd_pcm_writei)(snd_pcm_t *,short *,int);
+    int (*snd_pcm_readi)(snd_pcm_t *,short *,int);
+    int (*snd_pcm_poll_descriptors)(snd_pcm_t *,struct pollfd *,unsigned int);
 } alsa_functions;
 
 #define S(X) #X
@@ -75,29 +76,30 @@ alsa_functions *alsa = NULL;
 
 int alsa_load()
 {
-  WHY("Trying to load ALSA library");
-  void *h = dlopen("/usr/lib/libasound.so.2",RTLD_LAZY);
-  if (!h) return -1;
-  alsa_functions *a=calloc(sizeof(alsa_functions),1);
-  GETSYM(snd_pcm_open);
-  GETSYM(snd_pcm_hw_params_malloc);
-  GETSYM(snd_pcm_hw_params_any);
-  GETSYM(snd_pcm_hw_params_set_access);
-  GETSYM(snd_pcm_hw_params_set_format);
-  GETSYM(snd_pcm_hw_params_set_rate_near);
-  GETSYM(snd_pcm_hw_params_set_channels);
-  GETSYM(snd_pcm_hw_params);
-  GETSYM(snd_pcm_hw_params_free);
-  GETSYM(snd_pcm_prepare);
-  GETSYM(snd_pcm_writei);
-  GETSYM(snd_pcm_readi);
-  GETSYM(snd_pcm_close);
-  GETSYM(snd_pcm_poll_descriptors);
-  alsa=a;
-  dlclose(h);
-  WHY("Loaded ALSA library");
+    WHY("Trying to load ALSA library");
+    void *h = dlopen("/usr/lib/libasound.so.2",RTLD_LAZY);
+    if (!h) return -1;
+    alsa_functions *a=calloc(sizeof(alsa_functions),1);
+    GETSYM(snd_pcm_open);
+    GETSYM(snd_pcm_hw_params_malloc);
+    GETSYM(snd_pcm_hw_params_any);
+    GETSYM(snd_pcm_set_params);
+    GETSYM(snd_pcm_hw_params_set_access);
+    GETSYM(snd_pcm_hw_params_set_format);
+    GETSYM(snd_pcm_hw_params_set_rate_near);
+    GETSYM(snd_pcm_hw_params_set_channels);
+    GETSYM(snd_pcm_hw_params);
+    GETSYM(snd_pcm_hw_params_free);
+    GETSYM(snd_pcm_prepare);
+    GETSYM(snd_pcm_writei);
+    GETSYM(snd_pcm_readi);
+    GETSYM(snd_pcm_close);
+    GETSYM(snd_pcm_poll_descriptors);
+    alsa=a;
+    dlclose(h);
+    WHY("Loaded ALSA library");
 
-  return 0;
+    return 0;
 }
 
 
@@ -109,46 +111,52 @@ snd_pcm_hw_params_t *record_params;
 
 int audio_alsa_stop_play()
 {
-  if (!alsa) return 0;
-  alsa->snd_pcm_hw_params_free(play_params); play_params=NULL;
-  alsa->snd_pcm_close(play_handle);
-  return 0;
+    alsa_functions *temp = alsa;
+    if (!alsa) return 0;
+    alsa->snd_pcm_hw_params_free(play_params); play_params=NULL;
+    if (play_handle) {
+        alsa->snd_pcm_close(play_handle);
+    }
+    play_handle = NULL;
+    return 0;
 }
 
 int audio_alsa_stop_record()
 {
-  if (!alsa) return 0;
-  alsa->snd_pcm_hw_params_free(record_params); record_params=NULL;
-  alsa->snd_pcm_close(record_handle);
-  return 0;
+    if (!alsa) return 0;
+    alsa->snd_pcm_hw_params_free(record_params); record_params=NULL;
+    if (record_handle) {
+        alsa->snd_pcm_close(record_handle);
+    }
+    record_handle = NULL;
+    return 0;
 }
 
 int audio_alsa_start_play()
 {
-  int r;
+    int r;
 
-  /* if already playing, then return. */
-  if (alsa_handles_initialised) return 0;
-  
-  if (!alsa) return -1;
-  record_handle=NULL; play_handle=NULL;
-  record_params=NULL; play_params=NULL;
+    if (!alsa) return -1;
+    record_handle=NULL; play_handle=NULL;
+    record_params=NULL; play_params=NULL;
 
-  /* Open playback device */
-  r = alsa->snd_pcm_open (&play_handle,"default",
-                    SND_PCM_STREAM_PLAYBACK|SND_PCM_NONBLOCK,0);
-  if (r) { WHYF("ALSA pcm_open() failed"); goto error; }
+    /* Open playback device */
+    r = alsa->snd_pcm_open (&play_handle,"default",
+                            SND_PCM_STREAM_PLAYBACK|SND_PCM_NONBLOCK,0);
+    if (r) { WHYF("ALSA pcm_open() failed"); goto error; }
 
-  /* Configure playback device for 8000Hz, 16 bit, mono */
-  r=alsa->snd_pcm_hw_params_malloc(&play_params);
-  if (r) { WHYF("ALSA hw_params_malloc() failed"); goto error; }
-  r=alsa->snd_pcm_hw_params_any(play_handle,play_params);
+    /* Configure playback device for 8000Hz, 16 bit, mono */
+    r=alsa->snd_pcm_hw_params_malloc(&play_params);
+    if (r) { WHYF("ALSA hw_params_malloc() failed"); goto error; }
+    r = alsa->snd_pcm_set_params(play_handle,SND_PCM_FORMAT_S16_LE,SND_PCM_ACCESS_RW_INTERLEAVED,1,8000,1,500000);
+    if (r) { WHYF("ALSA snd_pcm_set_params() failed"); goto error; }
+    /*r=alsa->snd_pcm_hw_params_any(play_handle,play_params);
   if (r) { WHYF("ALSA hw_params_any() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_access(play_handle,play_params,
-				       SND_PCM_ACCESS_RW_INTERLEAVED);
+                       SND_PCM_ACCESS_RW_INTERLEAVED);
   if (r) { WHYF("ALSA hw_params_set_access() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_format(play_handle,play_params,
-				       SND_PCM_FORMAT_S16_LE);
+                       SND_PCM_FORMAT_S16_LE);
   if (r) { WHYF("ALSA hw_params_set_format() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_rate_near(play_handle,play_params,8000,0);
   if (r) { WHYF("ALSA hw_params_set_rate_near() failed"); goto error; }
@@ -156,36 +164,39 @@ int audio_alsa_start_play()
   if (r) { WHYF("ALSA hw_params_set_channels() failed"); goto error; }
   r=alsa->snd_pcm_hw_params(play_handle,play_params);
   if (r) { WHYF("ALSA snd_pcm_hw_params() failed"); goto error; }
-  alsa->snd_pcm_hw_params_free(play_params); play_params=NULL;
+  alsa->snd_pcm_hw_params_free(play_params); play_params=NULL;*/
 
-  r=alsa->snd_pcm_prepare(play_handle);
-  if (r) { WHYF("ALSA snd_pcm_prepare() failed"); goto error; }
+    r=alsa->snd_pcm_prepare(play_handle);
+    if (r) { WHYF("ALSA snd_pcm_prepare() failed"); goto error; }
 
-  WHY("Playback device configured");
+    WHY("Playback device configured");
+    return 0;
 
- error:
-  /* close handles and generally cleanup after ourselves */
-  audio_alsa_stop_play();
-  return -1;
+error:
+    /* close handles and generally cleanup after ourselves */
+    audio_alsa_stop_play();
+    return -1;
 }
 
 int audio_alsa_start_record()
 {
-  /* Open recording device non-blocking */
+    /* Open recording device non-blocking */
     int r = alsa->snd_pcm_open(&record_handle,"default",
-                       SND_PCM_STREAM_CAPTURE|SND_PCM_NONBLOCK,0);
-  if (r) { WHYF("ALSA pcm_open() failed"); goto error; }
+                               SND_PCM_STREAM_CAPTURE|SND_PCM_NONBLOCK,0);
+    if (r) { WHYF("ALSA pcm_open() failed"); goto error; }
 
-  /* Configure playback device for 8000Hz, 16 bit, mono */
-  r=alsa->snd_pcm_hw_params_malloc(&record_params);
-  if (r) { WHYF("ALSA hw_params_malloc() failed"); goto error; }
-  r=alsa->snd_pcm_hw_params_any(record_handle,record_params);
+    /* Configure playback device for 8000Hz, 16 bit, mono */
+    r=alsa->snd_pcm_hw_params_malloc(&record_params);
+    if (r) { WHYF("ALSA hw_params_malloc() failed"); goto error; }
+    r = alsa->snd_pcm_set_params(record_handle,SND_PCM_FORMAT_S16_LE,SND_PCM_ACCESS_RW_INTERLEAVED,1,8000,1,500000);
+    if (r) { WHYF("ALSA snd_pcm_set_params() failed"); goto error; }
+    /*r=alsa->snd_pcm_hw_params_any(record_handle,record_params);
   if (r) { WHYF("ALSA hw_params_any() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_access(record_handle,record_params,
-				       SND_PCM_ACCESS_RW_INTERLEAVED);
+                       SND_PCM_ACCESS_RW_INTERLEAVED);
   if (r) { WHYF("ALSA hw_params_set_access() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_format(record_handle,record_params,
-				       SND_PCM_FORMAT_S16_LE);
+                       SND_PCM_FORMAT_S16_LE);
   if (r) { WHYF("ALSA hw_params_set_format() failed"); goto error; }
   r=alsa->snd_pcm_hw_params_set_rate_near(record_handle,record_params,8000,0);
   if (r) { WHYF("ALSA hw_params_set_rate_near() failed"); goto error; }
@@ -193,88 +204,105 @@ int audio_alsa_start_record()
   if (r) { WHYF("ALSA hw_params_set_channels() failed"); goto error; }
   r=alsa->snd_pcm_hw_params(record_handle,record_params);
   if (r) { WHYF("ALSA snd_pcm_hw_params() failed"); goto error; }
-  alsa->snd_pcm_hw_params_free(record_params); record_params=NULL;
+  alsa->snd_pcm_hw_params_free(record_params); record_params=NULL;*/
 
-  r=alsa->snd_pcm_prepare(record_handle);
-  if (r) { WHYF("ALSA snd_pcm_prepare() failed"); goto error; }
+    r=alsa->snd_pcm_prepare(record_handle);
+    if (r) { WHYF("ALSA snd_pcm_prepare() failed"); goto error; }
 
-  WHY("Record device configured");
-  return 0;
- 
- error:
-  /* close handles and generally cleanup after ourselves */
-  audio_alsa_stop_record();
-  return -1;
+    WHY("Record device configured");
+    return 0;
+
+error:
+    /* close handles and generally cleanup after ourselves */
+    audio_alsa_stop_record();
+    return -1;
 }
 
 int audio_alsa_stop()
 {
-  audio_alsa_stop_play();
-  audio_alsa_stop_record();
-  return 0;
+    audio_alsa_stop_play();
+    audio_alsa_stop_record();
+    alsa_handles_initialised = 0;
+    return 0;
 }
 
 int audio_alsa_start()
 {
-  if (audio_alsa_start_play()) return -1;
-  if (audio_alsa_start_record()) {
-    audio_alsa_stop();
-    return -1;
-  }
-  return 0;
+    /* if already playing, then return. */
+    if (alsa_handles_initialised) return 0;
+
+    if (audio_alsa_start_play()) return -1;
+    if (audio_alsa_start_record()) {
+        audio_alsa_stop();
+        return -1;
+    }
+    //Audio Started - set initialized to 1
+    alsa_handles_initialised = 1;
+    return 0;
 }
 
 int audio_alsa_pollfds(struct pollfd *fds,int slots)
 {
-  int used_play
-    =alsa->snd_pcm_poll_descriptors(play_handle,fds,slots);
-  int used_record
-    =alsa->snd_pcm_poll_descriptors(record_handle,&fds[used_play],slots);
-  return used_play+used_record;
+    int used_play
+            =alsa->snd_pcm_poll_descriptors(play_handle,fds,slots);
+    int used_record
+            =alsa->snd_pcm_poll_descriptors(record_handle,&fds[used_play],slots);
+
+    return used_play+used_record;
 }
 
 int audio_alsa_read(unsigned char *buffer,int maximum_bytes)
 {
-  int frames_read=0;
-  if ((frames_read=
-       alsa->snd_pcm_readi(record_handle, (short *)buffer, maximum_bytes/2))<0)
-    {
-      alsa->snd_pcm_prepare(record_handle);
-      frames_read
-	=alsa->snd_pcm_readi(play_handle, (short *)buffer, maximum_bytes/2);
+    int frames_read=0;
+    int r = 0;
+
+    snd_pcm_t *temp1 = record_handle;
+    snd_pcm_t *temp2 = play_handle;
+
+    if (!record_handle || !play_handle)
+        r = audio_alsa_start();
+
+    if (r==0) {
+        if ((frames_read=
+             alsa->snd_pcm_readi(record_handle, (short *)buffer, maximum_bytes/2))<0)
+        {
+            alsa->snd_pcm_prepare(record_handle);
+            frames_read
+                    =alsa->snd_pcm_readi(play_handle, (short *)buffer, maximum_bytes/2);
+        }
     }
-  return frames_read*2;
+    return frames_read*2;
 }
 
 int audio_alsa_write(unsigned char *buffer,int bytes)
 {
-  /* 16 bits per sample, so frames = bytes/2 */
-  int frames_written=0;
-  if ((frames_written=alsa->snd_pcm_writei(play_handle, (short *)buffer, bytes/2))<0)
+    /* 16 bits per sample, so frames = bytes/2 */
+    int frames_written=0;
+    if ((frames_written=alsa->snd_pcm_writei(play_handle, (short *)buffer, bytes/2))<0)
     {
-      alsa->snd_pcm_prepare(play_handle);
-      return alsa->snd_pcm_writei(play_handle, (short *)buffer, bytes/2)*2;
+        alsa->snd_pcm_prepare(play_handle);
+        return alsa->snd_pcm_writei(play_handle, (short *)buffer, bytes/2)*2;
     }
-  else return 0;
+    else return 0;
 }
 
 monitor_audio *audio_alsa_detect()
 {
-  if (!alsa) alsa_load();
-  if (!alsa) return NULL;
-  snd_pcm_t *handle;
-  if (alsa->snd_pcm_open(&handle,"default",SND_PCM_STREAM_PLAYBACK,0) < 0)
-    return NULL;
-  alsa->snd_pcm_close(handle);
+    if (!alsa) alsa_load();
+    if (!alsa) return NULL;
+    snd_pcm_t *handle;
+    if (alsa->snd_pcm_open(&handle,"default",SND_PCM_STREAM_PLAYBACK,0) < 0)
+        return NULL;
+    alsa->snd_pcm_close(handle);
 
-  monitor_audio *au=calloc(sizeof(monitor_audio),1);
-  strcpy(au->name,"ALSA compatible");
-  au->start=audio_alsa_start;
-  au->stop=audio_alsa_stop;
-  au->poll_fds=audio_alsa_pollfds;
-  au->read=audio_alsa_read;
-  au->write=audio_alsa_write;
-  return au;
+    monitor_audio *au=calloc(sizeof(monitor_audio),1);
+    strcpy(au->name,"ALSA compatible");
+    au->start=audio_alsa_start;
+    au->stop=audio_alsa_stop;
+    //au->poll_fds=audio_alsa_pollfds;
+    au->read=audio_alsa_read;
+    au->write=audio_alsa_write;
+    return au;
 }
 
 #endif

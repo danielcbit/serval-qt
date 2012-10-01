@@ -130,10 +130,7 @@ int app_monitor_cli(int argc, const char *const *argv, struct command_line_optio
   monitor_audio *temp = audev;
   while(1) {
     fdcount=base_fd_count;
-    if(audev) {
-        if (audev&&audev->poll_fds)
-            fdcount+=audev->poll_fds(&fds[fdcount],128-fdcount);
-    }
+    if (audev&&audev->poll_fds) fdcount+=audev->poll_fds(&fds[fdcount],128-fdcount);
     poll(fds,fdcount,1000);
 
     set_nonblock(fd);
@@ -157,10 +154,10 @@ int app_monitor_cli(int argc, const char *const *argv, struct command_line_optio
 
     if (audev&&audev->read)
       {
-	WHY("about to read");
+    INFO("about to read");
 	int bytesRead=audev->read(&audioRecordBuffer[audioRecordBufferBytes],
 				  audioRecordBufferSize-audioRecordBufferBytes);
-	WHY("read");
+    INFO("read");
 	if (bytesRead>0) audioRecordBufferBytes+=bytesRead;
 	
 	/* 8KHz 16 bit samples = 16000 bytes per second.
@@ -286,6 +283,8 @@ int processChar(int c)
 	cmd[cmdLen++]=c;
       }
     } else {
+        int temp = cmdLen;
+        char *tempChar = cmd;
       if (!cmdLen) return 0;
       cmd[cmdLen]=0;
       if (sscanf(cmd,"*%d:%n",&dataBytesExpected,&cmdOfs)==1) {
